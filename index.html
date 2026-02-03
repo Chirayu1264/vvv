@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffe4e1;
+            --card-bg: #ffffff;
+            --primary-color: #ff4d6d;
+            --text-color: #590d22;
+            --accent-color: #ffb3c1;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Fredoka', sans-serif;
+            color: #d63384;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gif-container img {
+            width: 200px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .main-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Fredoka', sans-serif;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+        }
+
+        .main-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .secondary-btn {
+            background-color: #adb5bd;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        /* --- POST-YES CONTENT --- */
+        #post-yes-content {
+            display: none;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: left;
+        }
+
+        .card h2 {
+            text-align: center;
+            margin-top: 0;
+        }
+
+        /* Too Late Section */
+        #too-late-section {
+            display: none;
+            background-color: #fff0f3;
+            border: 2px dashed var(--primary-color);
+        }
+
+        .checklist-item {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        /* Date Ideas */
+        .date-idea {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .date-idea span {
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+
+        /* Envelope */
+        .envelope-wrapper {
+            position: relative;
+            cursor: pointer;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+        }
+        .envelope {
+            width: 300px;
+            height: 200px;
+            background: #ff8fa3;
+            position: relative;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.5s;
+        }
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid #ff758f;
+            transform-origin: top;
+            transition: 0.5s;
+            z-index: 5;
+        }
+        .letter {
+            position: absolute;
+            width: 260px;
+            height: 180px;
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: 0.5s;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #333;
+            top: 10px;
+        }
+        .envelope-wrapper.open .envelope::before {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+        .envelope-wrapper.open .letter {
+            top: -100px;
+            z-index: 2;
+        }
+
+        /* Memories Grid */
+        .memories-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .memory-box {
+            position: relative;
+            aspect-ratio: 1/1;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .memory-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .gift-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffccd5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            transition: opacity 0.5s;
+        }
+        .memory-box.revealed .gift-overlay {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Music */
+        .song-item {
+            margin-bottom: 15px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="hero" id="hero-section">
+            <h1 id="main-title">Will you be my Valentine? 💖</h1>
+            <p id="sub-title">Official invite to go out on a date with me</p>
+            
+            <div class="gif-container" id="hero-gif">
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHIycXN4Z3R4Z3R4Z3R4Z3R4Z3R4Z3R4Z3R4Z3R4Z3R4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/c76IJLufpNwSULPk77/giphy.gif" alt="Cute Bear">
+            </div>
+
+            <div class="buttons">
+                <button class="secondary-btn" id="no-btn" onclick="toggleNo()">No 😢</button>
+                <button class="main-btn" onclick="startJourney()">YES! 💖</button>
+            </div>
+        </div>
+
+        <div id="post-yes-content">
+            
+            <div class="card">
+                <h2>Good choice babu 🥳</h2>
+                <div style="text-align: center;">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbm5pZ3R4Z3R4Z3R4Z3R4Z3R4Z3R4Z3R4Z3R4Z3R4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/KztT2c4u8mYYUiMKdJ/giphy.gif" width="200" style="border-radius: 15px;">
+                </div>
+                <p style="text-align: center; margin-top: 15px;">
+                    Get ready to be spoiled! I'm planning everything. <br>
+                    (Just bring your pretty self)
+                </p>
+                <h3 style="text-align: center;">Now you're stuck with me forever ♾️</h3>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <p style="font-size: 0.8rem; opacity: 0.7;">Wait... do you want to change your mind?</p>
+                    <button class="secondary-btn" onclick="showTooLate()">Actually... No 😈</button>
+                </div>
+            </div>
+
+            <div class="card" id="too-late-section">
+                <h2>TOO LATE! 😜</h2>
+                <p>You already said YES, which means:</p>
+                <div class="checklist-item">❌ No take-backs allowed</div>
+                <div class="checklist-item">❌ You're legally mine now (I checked)</div>
+                <div class="checklist-item">❌ Every "no" from now on = 10 extra kisses</div>
+                <div class="checklist-item">❌ You're stuck with me FOREVER 😈</div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="main-btn" style="font-size: 1rem;" onclick="hideTooLate()">Deal with it 😎</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>The Plan For Us 🌹</h2>
+                
+                <div class="date-idea">
+                    <span>👗</span> I want you to dress up
+                </div>
+                
+                <div class="date-idea">
+                    <span>🕯️</span> I want to take you on a date
+                </div>
+
+                <div class="date-idea">
+                    <span>🤝</span> I want you to hold my hands and let me tell you that you're my Valentine forever
+                </div>
+
+                <div class="date-idea">
+                    <span>🏍️</span> And obviously... a night ride on our bike
+                </div>
+            </div>
+
+            <div class="card" style="text-align: center;">
+                <h2>A Secret Note For You 💌</h2>
+                <p>Click the envelope to open it...</p>
+                <div class="envelope-wrapper" onclick="toggleEnvelope(this)">
+                    <div class="envelope"></div>
+                    <div class="letter">
+                        <p><strong>To my favorite person,</strong></p>
+                        <p>I love every moment we spend together. I can't wait to make this Valentine's Day special for you.</p>
+                        <p>Love, <br>Your Boyfriend</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Our Best Memories 📸</h2>
+                <p style="text-align: center; font-size: 0.9rem;">Click to reveal each memory 🎁</p>
+                <div class="memories-grid">
+                    <div class="memory-box" onclick="revealMemory(this)">
+                        <div class="gift-overlay">🎁</div>
+                        <img src="1.jpeg" class="memory-img">
+                    </div>
+                     <div class="memory-box" onclick="revealMemory(this)">
+                        <div class="gift-overlay">🎁</div>
+                        <img src="2.jpeg" class="memory-img">
+                    </div>
+                     <div class="memory-box" onclick="revealMemory(this)">
+                        <div class="gift-overlay">🎁</div>
+                        <img src="3.jpeg" class="memory-img">
+                    </div>
+                     <div class="memory-box" onclick="revealMemory(this)">
+                        <div class="gift-overlay">🎁</div>
+                        <img src="4.jpeg" class="memory-img">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Songs That Remind Me of You 🎵</h2>
+                
+                <div class="song-item">
+                    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/7eadaD2SBArRbebB9CP70X?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                </div>
+                
+                 <div class="song-item">
+                    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/15MvgPKHdoA44YNiCXbDfa?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 50px 0; opacity: 0.6;">
+                <p>Made with ❤️ for you</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function startJourney() {
+            const heroSection = document.getElementById('hero-section');
+            const postYesContent = document.getElementById('post-yes-content');
+            const noBtn = document.getElementById('no-btn');
+            postYesContent.style.display = 'block';
+            noBtn.style.display = 'none';
+            postYesContent.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function toggleNo() {
+            const noBtn = document.getElementById('no-btn');
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            if (window.innerWidth < 600) {
+                alert("Nice try, but you can't say no! 😜");
+            } else {
+                noBtn.style.position = 'absolute';
+                noBtn.style.left = `${x}px`;
+                noBtn.style.top = `${y}px`;
+            }
+        }
+
+        function showTooLate() {
+            const tooLateSection = document.getElementById('too-late-section');
+            tooLateSection.style.display = 'block';
+            tooLateSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function hideTooLate() {
+            const tooLateSection = document.getElementById('too-late-section');
+            tooLateSection.style.display = 'none';
+            alert("Good choice! 😎");
+        }
+
+        function toggleEnvelope(element) {
+            element.classList.toggle('open');
+        }
+
+        function revealMemory(element) {
+            element.classList.add('revealed');
+        }
+    </script>
+</body>
+</html>
